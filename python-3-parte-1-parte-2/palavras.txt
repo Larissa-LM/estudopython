@@ -8,3 +8,11 @@ mesa
 lapis
 caneta
 caderno
+mamao 
+limao 
+cereja
+amora
+teclado 
+computador
+monitor
+documento 
