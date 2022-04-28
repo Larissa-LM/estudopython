@@ -1,4 +1,5 @@
 import random
+
 def jogar():
 
     imprime_mensagem_de_abertura()
@@ -24,7 +25,7 @@ def jogar():
             tentativas += 1
             desenha_forca(tentativas)
 
-        enforcou = tentativas == 6
+        enforcou = tentativas == 7
         acertou = "_" not in letras_acertadas
         print(letras_acertadas)
 
@@ -142,6 +143,12 @@ def desenha_forca(tentativas):
         print(" |      \|/   ")
         print(" |       |    ")
         print(" |      /     ")
+
+    if(tentativas == 7):
+        print(" |      (_)   ")
+        print(" |      \|/   ")
+        print(" |       |    ")
+        print(" |      / \    ")
 
     print(" |            ")
     print("_|___         ")
