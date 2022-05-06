@@ -19,8 +19,8 @@ class Programa:
     def dar_like(self):
         self._likes += 1
     
-    def imprime(self): 
-        print(f'{self._nome} - {self.ano} - {self._likes} likes')
+    def __str__(self): # Dunder method que transforma o retorno em string 
+        return (f'{self._nome} - {self.ano} - {self._likes} likes')
 
 class Filme(Programa): #Herdando da classe Programa
 
@@ -32,8 +32,8 @@ class Filme(Programa): #Herdando da classe Programa
         super().__init__(nome,ano)
         self.duracao = duracao
     
-    def imprime(self): 
-        print(f'{self._nome} - {self.ano} - {self.duracao} min - {self._likes} likes')
+    def __str__(self): 
+        return (f'{self._nome} - {self.ano} - {self.duracao} min - {self._likes} likes')
 
 class Serie(Programa): 
 
@@ -41,8 +41,8 @@ class Serie(Programa):
         super().__init__(nome,ano)
         self.temporadas = temporadas
     
-    def imprime(self): 
-        print(f'{self._nome} - {self.ano} - {self.temporadas} temporadas - {self._likes} likes')
+    def __str__(self): 
+        return(f'{self._nome} - {self.ano} - {self.temporadas} temporadas - {self._likes} likes')
 
     
 
@@ -58,7 +58,7 @@ filmes_e_series = [vingadores,mordern_family]
 for programa in filmes_e_series: 
     #detalhes = programa.duracao if hasattr(programa, "duracao") else programa.temporadas # hasattr é utilizado para verificar se um atributo existe em uma classe (existe duracaqo dentro do objeto programa?)
     #Reduzindo if
-    programa.imprime()
+    print(programa)
 
 
     
