@@ -42,7 +42,17 @@ class Serie(Programa):
         self.temporadas = temporadas
     
     def __str__(self): 
-        return(f'{self._nome} - {self.ano} - {self.temporadas} temporadas - {self._likes} likes')
+        return(f'{self._nome} - {self.ano} - {self.temporadas} temporada(s) - {self._likes} likes')
+
+class Playlist(): 
+
+    def __init__(self, nome, programas):
+        self.nome = nome
+        self.programas = programas
+
+    def tamanho(self): 
+        return len(self.programas) #len retorna o tamanho da lista 
+
 
     
 
@@ -50,12 +60,19 @@ class Serie(Programa):
 vingadores = Filme("Vingadores - Guerra infinita", 2018, 160)
 vingadores.dar_like()
 
+coracao_marcado = Serie("Coração Marcado", 2022, 1)
+coracao_marcado.dar_like() 
+
+emily_in_paris = Serie("Emily in Paris", 2021, 2)
+emily_in_paris.dar_like()
+
 mordern_family = Serie("modern family", 2009, 11)
 mordern_family.dar_like()
 
-filmes_e_series = [vingadores,mordern_family]
+filmes_e_series = [vingadores,mordern_family, coracao_marcado, emily_in_paris]
+playlist_fim_de_semana = Playlist("Playlist fim de semana", filmes_e_series)
 
-for programa in filmes_e_series: 
+for programa in playlist_fim_de_semana.programas: 
     #detalhes = programa.duracao if hasattr(programa, "duracao") else programa.temporadas # hasattr é utilizado para verificar se um atributo existe em uma classe (existe duracaqo dentro do objeto programa?)
     #Reduzindo if
     print(programa)
