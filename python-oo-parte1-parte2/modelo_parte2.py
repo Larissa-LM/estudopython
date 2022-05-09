@@ -49,21 +49,22 @@ class Playlist:
     def __init__(self, nome, programas):
         self.nome = nome
         self._programas= programas
+
+    def __getitem__(self, item): #Método que indica que classe pode ser usada para for in ou in (iterável) conhecido como duck type
+        return self._programas[item]
+         
+    def __len__(self): # Dunder method que implementa o comportamento de sized uma ideia de algo que possui tamanho, e que então precisará implementar um __len__() para que o len() externo possa funcionar em nossa classe.
+        return len(self._programas)
+
+    #@property
+    #def listagem(self):
+        #return self._programas
     
-    @property
-    def listagem(self):
-        return self._programas
-    
-    @property
-    def tamanho(self):
-        return len(self.programas)
+    #@property
+    #def tamanho(self):
+        #return len(self.programas)
 
      
-
-
-    
-
-
 vingadores = Filme("Vingadores - Guerra infinita", 2018, 160)
 vingadores.dar_like()
 
@@ -79,13 +80,16 @@ mordern_family.dar_like()
 filmes_e_series = [vingadores,mordern_family, coracao_marcado, emily_in_paris]
 playlist_fim_de_semana = Playlist("Playlist fim de semana", filmes_e_series)
 
-print(f'Tamanho da playlist: {len(playlist_fim_de_semana.listagem)}')
+print(f'Tamanho da playlist: {len(playlist_fim_de_semana)}') # sempre que o len() externo for chamado, conseguiremos obter o __len__() da nossa listagem interna.
 
-for programa in playlist_fim_de_semana.listagem: 
+
+for programa in playlist_fim_de_semana: 
     #detalhes = programa.duracao if hasattr(programa, "duracao") else programa.temporadas # hasattr é utilizado para verificar se um atributo existe em uma classe (existe duracaqo dentro do objeto programa?)
     #Reduzindo if
     print(programa)
 
-print(f'Existe ou não? {emily_in_paris in playlist_fim_de_semana.listagem}') 
+print(f'Existe ou não? {emily_in_paris in playlist_fim_de_semana}') #__getitem__ permite utilizar o in para saber se o item está ou não contido na lista
+
+print(f'Pegando primeiro item da lista: {playlist_fim_de_semana[0]}') # __getitem__ permite pegar itens por index
     
         
