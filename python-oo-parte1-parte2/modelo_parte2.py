@@ -44,14 +44,21 @@ class Serie(Programa):
     def __str__(self): 
         return(f'{self._nome} - {self.ano} - {self.temporadas} temporada(s) - {self._likes} likes')
 
-class Playlist(): 
+class Playlist: 
 
     def __init__(self, nome, programas):
         self.nome = nome
-        self.programas = programas
+        self._programas= programas
+    
+    @property
+    def listagem(self):
+        return self._programas
+    
+    @property
+    def tamanho(self):
+        return len(self.programas)
 
-    def tamanho(self): 
-        return len(self.programas) #len retorna o tamanho da lista 
+     
 
 
     
@@ -72,11 +79,13 @@ mordern_family.dar_like()
 filmes_e_series = [vingadores,mordern_family, coracao_marcado, emily_in_paris]
 playlist_fim_de_semana = Playlist("Playlist fim de semana", filmes_e_series)
 
-for programa in playlist_fim_de_semana.programas: 
+print(f'Tamanho da playlist: {len(playlist_fim_de_semana.listagem)}')
+
+for programa in playlist_fim_de_semana.listagem: 
     #detalhes = programa.duracao if hasattr(programa, "duracao") else programa.temporadas # hasattr é utilizado para verificar se um atributo existe em uma classe (existe duracaqo dentro do objeto programa?)
     #Reduzindo if
     print(programa)
 
-
+print(f'Existe ou não? {emily_in_paris in playlist_fim_de_semana.listagem}') 
     
         
