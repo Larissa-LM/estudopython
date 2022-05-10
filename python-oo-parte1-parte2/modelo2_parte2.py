@@ -22,7 +22,7 @@ class Alura(Funcionario):
     def busca_perguntas_sem_resposta(self):
         print('Mostrando perguntas não respondidas do fórum')
 
-class Hipster(Funcionario): 
+class Hipster(Funcionario): #Mixin: classes pequenas que não possuem objetos instanciados
     def __str__(self):
         return f'Hipster, {self.nome}'
 
@@ -45,3 +45,12 @@ marie.busca_cursos_do_mes()
 
 berfin = Senior("Berfin")
 print(berfin)
+
+
+#Algoritmo MRO 
+
+#pleno > Alura > Funcionário > Caelum > Funcionário
+# em caso de repetições se a classe for uma good head, ou seja não tenho nenhuma outra classe que é da mesma hierarquia que fuuncionário(que está abaixo de funcionário)
+# se existe uma outra classe que herda de funcionário o fluxo muda, tornando: 
+# pleno > Alura  > Caelum > Funcionário então Caelum é uma good head
+
