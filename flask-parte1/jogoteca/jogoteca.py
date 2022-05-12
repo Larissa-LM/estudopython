@@ -1,6 +1,6 @@
 from crypt import methods
 from distutils.log import debug
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 
 class Jogo(): 
     def __init__(self, nome, categoria, console):
@@ -26,7 +26,7 @@ def index():
 
 @app.route("/novojogo") #nova página com um forms para adicionar um novo jogo
 def adicionar_novo_jogo():
-    return render_template("novo_jogo.html") 
+    return render_template("novo_jogo.html", titulo = "Novo Jogo") 
 
 @app.route("/criar-novo-jogo", methods = ["POST" ,])
 def criar_novo_jogo(): 
@@ -36,7 +36,7 @@ def criar_novo_jogo():
     jogo = Jogo(nome,categoria,console)
     lista_de_jogos.append(jogo)
     
-    return render_template("lista.html", titulo = "Jogos", jogos = lista_de_jogos) 
+    return redirect("/") #redirecionando para a página inicial
 
 
 app.run(debug=True) #para conseguir rodar a aplicação 
