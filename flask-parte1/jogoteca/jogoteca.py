@@ -1,6 +1,6 @@
-from crypt import methods
+
 from distutils.log import debug
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session, flash
 
 class Jogo(): 
     def __init__(self, nome, categoria, console):
@@ -10,6 +10,7 @@ class Jogo():
 
 
 app = Flask(__name__) # __name__ faz referência ao próprio arquivo e garante que vai rodar a aplicação
+app.secret_key = "luna" # por estarmos guardando as informações no navegador(nos cookies) precisamos de uma secret key para evitar que pessoas mal intecionadas acesse a aplicação e faça alterações
 
 jogo1 = Jogo("Tetris", "Puzzle" , "Atari")
 jogo2 = Jogo("God of War","Rack n Slash", "PS2" )
@@ -28,7 +29,7 @@ def index():
 def adicionar_novo_jogo():
     return render_template("novo_jogo.html", titulo = "Novo Jogo") 
 
-@app.route("/criar-novo-jogo", methods = ["POST" ,])
+@app.route("/criar-novo-jogo", methods = ["POST" ,]) #Rota intermediária
 def criar_novo_jogo(): 
     nome = request.form["nome"] #request é um helper do flask que captura a informação do form neste caso. Passamos os valores da tag name do arquivo no_jogo.html nos [""]
     categoria = request.form["categoria"]
@@ -38,5 +39,18 @@ def criar_novo_jogo():
     
     return redirect("/") #redirecionando para a página inicial
 
+@app.route("/login")
+def login(): 
+    return render_template("login.html")
+
+@app.route("/autenticar", methods = ["POST"])
+def autenticar(): 
+    if "distrito12" == request.form["senha"]:
+        session["usuario_logado"] = request.form["usuario"]
+        flash(session["usuario_logado"] + " logado com sucesso!")
+        return redirect("/")
+    else:
+        flash("Usuário não logado!")
+        return redirect("/login")
 
 app.run(debug=True) #para conseguir rodar a aplicação 
