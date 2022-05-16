@@ -28,7 +28,7 @@ def index():
 @app.route("/novojogo") #nova página com um forms para adicionar um novo jogo
 def adicionar_novo_jogo():
     if "usuario_logado" not in session or session["usuario_logado"] == None: 
-        return redirect("/login")
+        return redirect("/login?proxima=novojogo") #(?proxima=criar-novo-jogo) é uma query string onde crio uma variável para indicar a página que quero se redirecionada
     else: 
         return render_template("novo_jogo.html", titulo = "Novo Jogo") 
 
@@ -44,14 +44,16 @@ def criar_novo_jogo():
 
 @app.route("/login")
 def login(): 
-    return render_template("login.html")
+    proxima = request.args.get("proxima") # variavel proxima captura a informação da query string criada em adicionar_novo_jogo
+    return render_template("login.html", proxima = proxima) # aqui estamos info da próxima página pra o html do login 
 
 @app.route("/autenticar", methods = ["POST"])
 def autenticar(): 
     if "distrito12" == request.form["senha"]:
-        session["usuario_logado"] = request.form["usuario"]
+        session["usuario_logado"] = request.form["usuario"] # session permite armarzenar dados de um request temporariamente 
         flash(session["usuario_logado"] + " logado com sucesso!")
-        return redirect("/")
+        proxima_pagina = request.form["proxima"]
+        return redirect(f"/{proxima_pagina}")
     else:
         flash("Usuário não logado!")
         return redirect("/login")
