@@ -27,7 +27,10 @@ def index():
 
 @app.route("/novojogo") #nova página com um forms para adicionar um novo jogo
 def adicionar_novo_jogo():
-    return render_template("novo_jogo.html", titulo = "Novo Jogo") 
+    if "usuario_logado" not in session or session["usuario_logado"] == None: 
+        return redirect("/login")
+    else: 
+        return render_template("novo_jogo.html", titulo = "Novo Jogo") 
 
 @app.route("/criar-novo-jogo", methods = ["POST" ,]) #Rota intermediária
 def criar_novo_jogo(): 
@@ -52,5 +55,11 @@ def autenticar():
     else:
         flash("Usuário não logado!")
         return redirect("/login")
+
+@app.route("/logout")
+def logout(): 
+    session["usuario_logado"] = None 
+    flash("Logout realizado com sucesso!")
+    return redirect("/")
 
 app.run(debug=True) #para conseguir rodar a aplicação 
