@@ -1,6 +1,6 @@
 
 from distutils.log import debug
-from flask import Flask, render_template, request, redirect, session, flash
+from flask import Flask, render_template, request, redirect, session, flash, url_for
 
 class Jogo(): 
     def __init__(self, nome, categoria, console):
@@ -28,8 +28,9 @@ def index():
 @app.route("/novojogo") #nova página com um forms para adicionar um novo jogo
 def adicionar_novo_jogo():
     if "usuario_logado" not in session or session["usuario_logado"] == None: 
-        return redirect("/login?proxima=novojogo") #(?proxima=criar-novo-jogo) é uma query string onde crio uma variável para indicar a página que quero se redirecionada
-    else: 
+        return redirect(url_for("login", proxima = url_for("adicionar_novo_jogo"))) #url dinâmica
+                #(/login?proxima=criar-novo-jogo) é uma query string onde crio uma variável para indicar a página que quero se redirecionada
+    else:
         return render_template("novo_jogo.html", titulo = "Novo Jogo") 
 
 @app.route("/criar-novo-jogo", methods = ["POST" ,]) #Rota intermediária
@@ -40,7 +41,7 @@ def criar_novo_jogo():
     jogo = Jogo(nome,categoria,console)
     lista_de_jogos.append(jogo)
     
-    return redirect("/") #redirecionando para a página inicial
+    return redirect(url_for("index")) #redirecionando para a página inicial
 
 @app.route("/login")
 def login(): 
@@ -53,15 +54,16 @@ def autenticar():
         session["usuario_logado"] = request.form["usuario"] # session permite armarzenar dados de um request temporariamente 
         flash(session["usuario_logado"] + " logado com sucesso!")
         proxima_pagina = request.form["proxima"]
-        return redirect(f"/{proxima_pagina}")
+        print(proxima_pagina)
+        return redirect(proxima_pagina)
     else:
         flash("Usuário não logado!")
-        return redirect("/login")
+        return redirect(url_for("login"))
 
 @app.route("/logout")
 def logout(): 
     session["usuario_logado"] = None 
     flash("Logout realizado com sucesso!")
-    return redirect("/")
+    return redirect(url_for("index"))
 
 app.run(debug=True) #para conseguir rodar a aplicação 
