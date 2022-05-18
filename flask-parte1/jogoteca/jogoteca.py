@@ -8,6 +8,12 @@ class Jogo():
         self.categoria = categoria 
         self.console = console
 
+class Usuario(): 
+    def __init__(self, nome, nickname, senha):
+        self.nome = nome 
+        self.nickname = nickname
+        self.senha = senha 
+
 
 app = Flask(__name__) # __name__ faz referência ao próprio arquivo e garante que vai rodar a aplicação
 app.secret_key = "luna" # por estarmos guardando as informações no navegador(nos cookies) precisamos de uma secret key para evitar que pessoas mal intecionadas acesse a aplicação e faça alterações
@@ -17,6 +23,13 @@ jogo2 = Jogo("God of War","Rack n Slash", "PS2" )
 jogo3 = Jogo("Mortal Kombat", "Luta", "PS2")
 lista_de_jogos = [jogo1, jogo2, jogo3]
 
+usuario1 = Usuario("Katniss Everdeen", "Kat", "jogosvorazes")
+usuario2 = Usuario("Feyre Archeron", "Fey", "acotar")
+usuario3 = Usuario("Edward Cullen", "Ed", "crepusculo")
+
+usuarios = { usuario1.nickname : usuario1,
+             usuario2.nickname : usuario2,
+             usuario3.nickname : usuario3 }
 
 @app.route('/') #para colocar uma informação no site precisamos colocar uma rota e em seguida precisamos criar uma função para definir o que existe dentro dessa rota
 def index():
@@ -49,16 +62,21 @@ def login():
     return render_template("login.html", proxima = proxima) # aqui estamos info da próxima página pra o html do login 
 
 @app.route("/autenticar", methods = ["POST"])
-def autenticar(): 
-    if "distrito12" == request.form["senha"]:
-        session["usuario_logado"] = request.form["usuario"] # session permite armarzenar dados de um request temporariamente 
-        flash(session["usuario_logado"] + " logado com sucesso!")
-        proxima_pagina = request.form["proxima"]
-        print(proxima_pagina)
-        return redirect(proxima_pagina)
-    else:
-        flash("Usuário não logado!")
-        return redirect(url_for("login"))
+def autenticar():
+    #import pdb
+    #pdb.set_trace() 
+    if request.form['usuario'] in usuarios:
+        usuario = usuarios[request.form['usuario']]
+        if request.form['senha'] == usuario.senha:
+            session['usuario_logado'] = usuario.nickname
+            flash(usuario.nickname + ' logado com sucesso!')
+            proxima_pagina = request.form['proxima']
+
+            return redirect(proxima_pagina)
+    
+
+    flash("Usuário não logado!")
+    return redirect(url_for("login"))
 
 @app.route("/logout")
 def logout(): 
