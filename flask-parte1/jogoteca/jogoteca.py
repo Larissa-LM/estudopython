@@ -2,37 +2,29 @@
 from distutils.log import debug
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 
-class Jogo(): 
-    def __init__(self, nome, categoria, console):
-        self.nome = nome
-        self.categoria = categoria 
-        self.console = console
+from flask_mysqldb import MySQL 
+from dao import JogoDao, UsuarioDao
+from models import Jogo, Usuario
 
-class Usuario(): 
-    def __init__(self, nome, nickname, senha):
-        self.nome = nome 
-        self.nickname = nickname
-        self.senha = senha 
 
 
 app = Flask(__name__) # __name__ faz referência ao próprio arquivo e garante que vai rodar a aplicação
 app.secret_key = "luna" # por estarmos guardando as informações no navegador(nos cookies) precisamos de uma secret key para evitar que pessoas mal intecionadas acesse a aplicação e faça alterações
+app.config['MYSQL_HOST'] = "0.0.0.0"
+app.config['MYSQL_USER'] = "root"
+app.config['MYSQL_PASSWORD'] = "admin"
+app.config['MYSQL_DB'] = "jogoteca"
+app.config['MYSQL_PORT'] = 3306
 
-jogo1 = Jogo("Tetris", "Puzzle" , "Atari")
-jogo2 = Jogo("God of War","Rack n Slash", "PS2" )
-jogo3 = Jogo("Mortal Kombat", "Luta", "PS2")
-lista_de_jogos = [jogo1, jogo2, jogo3]
+db = MySQL(app)
+jogo_dao = JogoDao(db)
 
-usuario1 = Usuario("Katniss Everdeen", "Kat", "jogosvorazes")
-usuario2 = Usuario("Feyre Archeron", "Fey", "acotar")
-usuario3 = Usuario("Edward Cullen", "Ed", "crepusculo")
+usuario_dao = UsuarioDao(db)
 
-usuarios = { usuario1.nickname : usuario1,
-             usuario2.nickname : usuario2,
-             usuario3.nickname : usuario3 }
 
 @app.route('/') #para colocar uma informação no site precisamos colocar uma rota e em seguida precisamos criar uma função para definir o que existe dentro dessa rota
 def index():
+    lista_de_jogos = jogo_dao.listar()
     return render_template("lista.html", titulo = "Jogos", jogos = lista_de_jogos) # Não é uma boa prática utilizar o html direto e sim importá-lo. render_tempĺate sabe que existe uma pasta templates então é só passar o arquivo
                                                            # Além disso é posssível passar variáveis daqui para o arquivo html através do render 
     
@@ -52,7 +44,7 @@ def criar_novo_jogo():
     categoria = request.form["categoria"]
     console = request.form["console"]
     jogo = Jogo(nome,categoria,console)
-    lista_de_jogos.append(jogo)
+    jogo_dao.salvar(jogo)
     
     return redirect(url_for("index")) #redirecionando para a página inicial
 
@@ -64,12 +56,12 @@ def login():
 @app.route("/autenticar", methods = ["POST"])
 def autenticar():
     #import pdb
-    #pdb.set_trace() 
-    if request.form['usuario'] in usuarios:
-        usuario = usuarios[request.form['usuario']]
+    #pdb.set_trace()
+    usuario = usuario_dao.buscar_por_id(request.form['usuario'])
+    if usuario:
         if request.form['senha'] == usuario.senha:
-            session['usuario_logado'] = usuario.nickname
-            flash(usuario.nickname + ' logado com sucesso!')
+            session['usuario_logado'] = usuario.id
+            flash(usuario.id + ' logado com sucesso!')
             proxima_pagina = request.form['proxima']
 
             return redirect(proxima_pagina)
