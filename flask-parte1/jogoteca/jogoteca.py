@@ -48,10 +48,22 @@ def criar_novo_jogo():
     
     return redirect(url_for("index")) #redirecionando para a página inicial
 
+@app.route("/editar/<int:id>") #para passar parâmetros em uma rota utilizamos os <> 
+def editar(id):
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        return redirect(url_for('login', proxima=url_for('editar')))
+    jogo = jogo_dao.busca_por_id(id)
+    return render_template('editar.html', titulo = 'Editando jogo', jogo = jogo)
+
+
+@app.route("/atualizar", methods = ["POST" ,]) #Rota intermediária
+def atualizar(): 
+   pass
+
 @app.route("/login")
 def login(): 
     proxima = request.args.get("proxima") # variavel proxima captura a informação da query string criada em adicionar_novo_jogo
-    return render_template("login.html", proxima = proxima) # aqui estamos info da próxima página pra o html do login 
+    return render_template("login.html", proxima = proxima) # aqui estamos informando a próxima página pra o html do login 
 
 @app.route("/autenticar", methods = ["POST"])
 def autenticar():
