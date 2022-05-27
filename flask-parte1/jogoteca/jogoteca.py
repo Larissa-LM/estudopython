@@ -45,6 +45,8 @@ def criar_novo_jogo():
     console = request.form["console"]
     jogo = Jogo(nome,categoria,console)
     jogo_dao.salvar(jogo)
+    imagem = request.files["imagem"]
+    imagem.save(f'uploads/{imagem.filename}')
     
     return redirect(url_for("index")) #redirecionando para a página inicial
 

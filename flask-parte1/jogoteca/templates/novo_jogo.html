@@ -2,7 +2,8 @@
 {% block conteudo %}
 
 
-<form action = "{{ url_for('criar_novo_jogo') }}" method="post">
+<form action = "{{ url_for('criar_novo_jogo') }}" method="post" enctype="multipart/form-data">
+  <input type="file" name="imagem" accept=".jpg, .png , .jpeg">
   <fieldset>
       <div class="form-group">
         <label for="nome">Nome</label>
