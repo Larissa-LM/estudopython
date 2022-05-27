@@ -30,7 +30,7 @@ def index():
     
     #return "<h1>Olá mundo</h1>" Precisamos colocar tags html por estar trabalhando com web 
 
-@app.route("/novojogo") #nova página com um forms para adicionar um novo jogo
+@app.route("/adicionar_novo_jogo") #nova página com um forms para adicionar um novo jogo
 def adicionar_novo_jogo():
     if "usuario_logado" not in session or session["usuario_logado"] == None: 
         return redirect(url_for("login", proxima = url_for("adicionar_novo_jogo"))) #url dinâmica
@@ -51,7 +51,7 @@ def criar_novo_jogo():
 @app.route("/editar/<int:id>") #para passar parâmetros em uma rota utilizamos os <> 
 def editar(id):
     if 'usuario_logado' not in session or session['usuario_logado'] == None:
-        return redirect(url_for('login', proxima=url_for('editar')))
+        return redirect(url_for('login', proxima=url_for('editar', id = id)))
     jogo = jogo_dao.busca_por_id(id)
     return render_template('editar.html', titulo = 'Editando jogo', jogo = jogo)
 
@@ -66,6 +66,12 @@ def atualizar():
     jogo_dao.salvar(jogo)
     
     return redirect(url_for("index")) 
+
+@app.route("/deletar/<int:id>")
+def deletar(id):
+    jogo_dao.deletar(id)
+    flash("Jogo removido com sucesso!")
+    return redirect(url_for("index"))
 
 @app.route("/login")
 def login(): 
