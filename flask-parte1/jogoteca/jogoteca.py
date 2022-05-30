@@ -5,6 +5,8 @@ from flask import Flask, render_template, request, redirect, session, flash, url
 from flask_mysqldb import MySQL 
 from dao import JogoDao, UsuarioDao
 from models import Jogo, Usuario
+import os
+
 
 
 
@@ -15,6 +17,7 @@ app.config['MYSQL_USER'] = "root"
 app.config['MYSQL_PASSWORD'] = "admin"
 app.config['MYSQL_DB'] = "jogoteca"
 app.config['MYSQL_PORT'] = 3306
+app.config['UPLOAD_PATH'] = os.path.dirname(os.path.abspath(__file__)) + '/uploads' #Passando o caminho absoluto, onde dirname poega desde da raiz do diretório e o abspath pega o file jogoteca.py
 
 db = MySQL(app)
 jogo_dao = JogoDao(db)
@@ -22,7 +25,7 @@ jogo_dao = JogoDao(db)
 usuario_dao = UsuarioDao(db)
 
 
-@app.route('/') #para colocar uma informação no site precisamos colocar uma rota e em seguida precisamos criar uma função para definir o que existe dentro dessa rota
+ @app.route('/') #para colocar uma informação no site precisamos colocar uma rota e em seguida precisamos criar uma função para definir o que existe dentro dessa rota
 def index():
     lista_de_jogos = jogo_dao.listar()
     return render_template("lista.html", titulo = "Jogos", jogos = lista_de_jogos) # Não é uma boa prática utilizar o html direto e sim importá-lo. render_tempĺate sabe que existe uma pasta templates então é só passar o arquivo
@@ -44,9 +47,12 @@ def criar_novo_jogo():
     categoria = request.form["categoria"]
     console = request.form["console"]
     jogo = Jogo(nome,categoria,console)
-    jogo_dao.salvar(jogo)
+    jogo = jogo_dao.salvar(jogo)
     imagem = request.files["imagem"]
-    imagem.save(f'uploads/{imagem.filename}')
+    imagem.save(f'{}/{imagem.filename}')
+    upload_path = app.config['UPLOAD_PATH']
+    imagem.save(f'{upload_path}/capa{jogo.id},jpg') # salvando o nome do arquivo com o id do jogo
+    #imagem.save(f'uploads/{imagem.filename}') Caminho para a imagem chumbado
     
     return redirect(url_for("index")) #redirecionando para a página inicial
 
