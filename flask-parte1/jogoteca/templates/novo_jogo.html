@@ -3,7 +3,14 @@
 
 
 <form action = "{{ url_for('criar_novo_jogo') }}" method="post" enctype="multipart/form-data">
-  <input type="file" name="imagem" accept=".jpg, .png , .jpeg">
+  <figure>
+    <figcaption class ="img-thumbnail col-md-5">
+      <img class="img-fluid" src="{{ url_for('imagem', nome_arquivo = 'upload_imagem.jpg' ) }}" >
+      <label>
+         <input type="file" name="arquivo" accept=".jpg">
+      </label>
+    </figcaption>
+  </figure>
   <fieldset>
       <div class="form-group">
         <label for="nome">Nome</label>
