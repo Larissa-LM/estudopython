@@ -6,8 +6,9 @@
   <figure>
     <figcaption class ="img-thumbnail col-md-5">
       <img class="img-fluid" src="{{ url_for('imagem', nome_arquivo = 'upload_imagem.jpg' ) }}" >
-      <label>
-         <input type="file" name="arquivo" accept=".jpg">
+      <label class="fileContainer">
+        Mudar Capa
+         <input type="file" name="arquivo" accept=".jpg .jpeg .png">
       </label>
     </figcaption>
   </figure>
@@ -24,8 +25,8 @@
         <label for="console">Console</label>
         <input type="text" id="console" name="console" class="form-control">
       </div>
-      <button type="submit" class="btn btn-primary btn-salvar">Salvar</button>
-      <a class="btn btn-danger" style="margin: 10px ;" href="{{ url_for('index')}}">Voltar</a>
+      <button type="submit" class="btn btn-primary" >Salvar</button>
+      <a class="btn btn-danger"  href="{{ url_for('index')}}">Voltar</a>
   </fieldset>
 </form>
 

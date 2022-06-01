@@ -2,9 +2,10 @@
 {% block conteudo %}
       <form action = "{{ url_for('atualizar') }}" method="post">
         <figure>
-          <figcaption>
-            <img src="{{ url_for('imagem', nome_arquivo = capa_jogo) }}">
-            <label>
+          <figcaption class ="img-thumbnail col-md-5">
+            <img class="img-fluid" src="{{ url_for('imagem', nome_arquivo = capa_jogo) }}">
+            <label class="fileContainer">
+               Mudar Capa
                <input type="file" name="arquivo" accept=".jpg">
             </label>
           </figcaption>
@@ -23,7 +24,7 @@
             <label for="console">Console</label>
             <input type="text" id="console" name="console" class="form-control" value="{{ jogo.console }}">
           </div>
-          <button type="submit" class="btn btn-primary btn-salvar">Salvar</button>
+          <button type="submit" class="btn btn-primary">Salvar</button>
         </fieldset>
       </form>
 {% endblock %}
