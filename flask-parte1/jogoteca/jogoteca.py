@@ -6,7 +6,7 @@ from flask_mysqldb import MySQL
 from dao import JogoDao, UsuarioDao
 from models import Jogo, Usuario
 import os
-
+import time
 
 
 
@@ -50,7 +50,8 @@ def criar_novo_jogo():
     jogo = jogo_dao.salvar(jogo)
     imagem = request.files["arquivo"]
     upload_path = app.config['UPLOAD_PATH']
-    imagem.save(f'{upload_path}/capa{jogo.id}.jpg') # salvando o nome do arquivo com o id do jogo
+    timestamp = time.time()
+    imagem.save(f'{upload_path}/capa{jogo.id}-{timestamp}.jpg') # salvando o nome do arquivo com o id do jogo
     #imagem.save(f'uploads/{imagem.filename}') Caminho para a imagem chumbado
     
     return redirect(url_for("index")) #redirecionando para a página inicial
@@ -60,7 +61,8 @@ def editar(id):
     if 'usuario_logado' not in session or session['usuario_logado'] == None:
         return redirect(url_for('login', proxima=url_for('editar', id = id)))
     jogo = jogo_dao.busca_por_id(id)
-    return render_template('editar.html', titulo = 'Editando jogo', jogo = jogo, capa_jogo = f'capa{id}.jpg')
+    nome_imagem = recupera_imagem(id)
+    return render_template('editar.html', titulo = 'Editando jogo', jogo = jogo, capa_jogo = nome_imagem)
 
 
 @app.route("/atualizar", methods = ["POST" ,]) #Rota intermediária
@@ -71,6 +73,12 @@ def atualizar():
     id = request.form["id"]
     jogo = Jogo(nome,categoria,console, id) 
     jogo_dao.salvar(jogo)
+
+    imagem = request.files["arquivo"]
+    upload_path = app.config['UPLOAD_PATH']
+    timestamp = time.time()
+    deleta_imagem(jogo.id)
+    imagem.save(f'{upload_path}/capa{jogo.id}-{timestamp}.jpg')
     
     return redirect(url_for("index")) 
 
@@ -112,6 +120,14 @@ def logout():
 def imagem(nome_arquivo): 
     return send_from_directory('uploads', nome_arquivo)
 
+def recupera_imagem(id):
+    for nome_arquivo in os.listdir(app.config['UPLOAD_PATH']): # percorrendo os nomes dos arquivos direto na pasta. Obs: listdir() permite que percorra os nomes dos arquivos diretamente no diretório
+        if f'capa{id}' in nome_arquivo:
+            return nome_arquivo
+
+def deleta_imagem(id):
+    arquivo = recupera_imagem(id)
+    os.remove(os.path.join(app.config['UPLOAD_PATH'],arquivo)) #removendo a imagem. join permite juntar diferentes paths, neste caso o app.config['UPLOAD_PATH'] e o arquivo.
 
 
 app.run(debug=True) #para conseguir rodar a aplicação 
