@@ -29,7 +29,7 @@ class Filme(Programa): #Herdando da classe Programa
         #self.ano = ano 
         #self._likes = 0 Para evitar repetição de código, existe outra maneira de usar atributos da classe mãe:
 
-        super().__init__(nome,ano)
+        super().__init__(nome,ano) #super() chama qualquer atributo da classe mãe
         self.duracao = duracao
     
     def __str__(self): 
